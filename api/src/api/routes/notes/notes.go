@@ -3,6 +3,7 @@ package noteRouter
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -36,7 +37,7 @@ func addNote(w http.ResponseWriter, r *http.Request) {
 		Text string `json:"text"`
 	}
 
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil || strings.TrimSpace(body.Text) == "" {
 		http.Error(w, "something went wrong", 500)
 		return
 	}
