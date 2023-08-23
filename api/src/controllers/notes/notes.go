@@ -6,7 +6,7 @@ import (
 )
 
 func AddNew(userId int, text string) (noteModel.Note, error) {
-	spellerRes, err := speller.CheckText(text)
+	spellerRes, err := speller.CheckText(text, speller.IGNORE_DIGITS|speller.IGNORE_URLS)
 	if err != nil {
 		return noteModel.Note{}, err
 	}

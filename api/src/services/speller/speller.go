@@ -6,6 +6,7 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"strconv"
 
 	"github.com/ise0/kode-test/src/shared/logger"
 )
@@ -20,9 +21,17 @@ type spellerError struct {
 	S    []string `json:"s"`
 }
 
-func CheckText(text string) ([]spellerError, error) {
+var (
+	IGNORE_DIGITS         = 2
+	IGNORE_URLS           = 4
+	FIND_REPEAT_WORDS     = 8
+	IGNORE_CAPITALIZATION = 512
+)
+
+func CheckText(text string, flag int) ([]spellerError, error) {
 	body := new(bytes.Buffer)
 	mp := multipart.NewWriter(body)
+	mp.WriteField("options", strconv.Itoa(flag))
 	mp.WriteField("text", text)
 
 	res, err := http.Post(
