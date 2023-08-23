@@ -1,0 +1,24 @@
+services:
+  api:
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - 3000:3000
+    env_file:
+      - ./api/.env
+    volumes:  
+      - ./api/logs:/app/logs
+  postgres:
+    image: postgres:12-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:  
+      - db:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d
+volumes:
+  db:
