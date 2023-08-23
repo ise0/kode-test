@@ -12,8 +12,11 @@ func AddNew(userId int, text string) (noteModel.Note, error) {
 	}
 
 	rtext := []rune(text)
+	posOffset := 0
 	for _, v := range spellerRes {
-		rtext = append(rtext[:v.Pos], append([]rune(v.S[0]), rtext[v.Pos+v.Len:]...)...)
+		newWord := []rune(v.S[0])
+		rtext = append(rtext[:v.Pos+posOffset], append(newWord, rtext[v.Pos+posOffset+v.Len:]...)...)
+		posOffset += len(newWord) - v.Len
 	}
 
 	n, err := noteModel.New(userId, string(rtext))
